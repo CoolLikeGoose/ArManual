@@ -12,12 +12,8 @@ namespace Tracking.Markers
 {
     public class MarkerManager : MonoBehaviour
     {
-        [Header("Settings")]
-        // [SerializeField] private float ;
-        [Header("Debug")]
-    
-
         [Header("Dependencies")]
+        [SerializeField] private APILoader apiLoader;
         [SerializeField] private ArUcoDetector arUcoDetector;
         [SerializeField] private XROrigin origin;
         [SerializeField] private ARAnchorManager arAnchorManager;
@@ -50,6 +46,7 @@ namespace Tracking.Markers
 
         public void LoadScenario(ScenarioModel scenarioModel)
         {
+            DebugController.Log(this, "Loading scenario: " + scenarioModel.name);
             isInitialzed = false;
             Clear();
         
@@ -58,8 +55,8 @@ namespace Tracking.Markers
             foreach (var interaction in scenarioModel.Interactions)
             {
                 DebugController.Log(this, "Interaction ID: " + interaction.interactionID);
-                InteractionPointModel iPoint = APILoader.Instance.LoadIPointByID(interaction.interactionPointID);
-                TrackPointModel trackPoint = APILoader.Instance.LoadTrackPointByID(iPoint.trackpointID);
+                InteractionPointModel iPoint = apiLoader.LoadIPointByID(interaction.interactionPointID);
+                TrackPointModel trackPoint = apiLoader.LoadTrackPointByID(iPoint.trackpointID);
 
                 if (!trackPoints.Values.Contains(trackPoint))
                 {
@@ -193,7 +190,6 @@ namespace Tracking.Markers
                 -cvRot.z,
                 cvRot.w
             );
-            //TODO: Check if coordinate system correlates
     
             return unityRot;
         }
@@ -223,8 +219,6 @@ namespace Tracking.Markers
     
         public void Clear()
         {
-            //TODO: Add check for pending markers
-        
             foreach (var controller in markerControllers.Values)
             {
                 if (controller != null) controller.Cleanup();
@@ -238,6 +232,8 @@ namespace Tracking.Markers
             interactionPoints.Clear();
             markerControllers.Clear();
             trackPoints.Clear();
+            
+            pendingMarkers.Clear();
         }
     }
 }

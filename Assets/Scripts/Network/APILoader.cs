@@ -1,5 +1,5 @@
+using System;
 using System.Collections;
-using Core;
 using DebugTools;
 using Models;
 using Tests;
@@ -9,13 +9,8 @@ namespace Network
 {
     public class APILoader : MonoBehaviour
     {
-        public static APILoader Instance {get; private set;}
-
-        private void Awake()
-        {
-            Instance = this;
-        }
-
+        public event Action<ManualModel> OnManualLoaded;
+        
         public void LoadManual(string qrCode)
         {
             DebugController.Log(this,"Loading manual: " + qrCode);
@@ -39,8 +34,8 @@ namespace Network
             int manualId = int.Parse(qrCode.Split('-')[1]);
             ManualModel data = DummyData.Manual2;
             DebugController.Log(this, "Manual loaded - " + data.name);
-        
-            AppController.Instance.OnInstructionLoaded(data);
+            
+            OnManualLoaded?.Invoke(data);
         }
     }
 }

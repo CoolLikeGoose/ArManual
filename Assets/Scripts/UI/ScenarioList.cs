@@ -10,7 +10,10 @@ namespace UI
 {
     public class ScenarioList : MonoBehaviour
     {
+        //TODO: get rid of singleton
         public static ScenarioList Instance { get; private set; }
+        
+        [SerializeField] private AppCoordinator appCoordinator;
     
         [SerializeField] private GameObject scenarioPrefab;
         [SerializeField] private GameObject headerPrefab;
@@ -51,8 +54,9 @@ namespace UI
 
                     item.GetComponent<Button>().onClick.AddListener(() =>
                         {
-                            DebugController.Log(this, "scenario: " + scenario.name);
-                            AppController.Instance.OnScenarioLoaded(scenario);
+                            DebugController.Log(this, "scenario clicked: " + scenario.name);
+                            //TODO: create scenario manager
+                            appCoordinator.OnScenarioLoaded(scenario);
                         }
                     );
                 }

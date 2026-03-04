@@ -1,3 +1,4 @@
+using System;
 using Core;
 using DebugTools;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace Detection
     public class QrScanner : MonoBehaviour
     {
         [SerializeField] private CameraController cameraController;
+        [SerializeField] private AppCoordinator appCoordinator;
     
         private Texture2D _cameraImageTexture;
     
@@ -55,7 +57,7 @@ namespace Detection
         
             string result = _result.Text + " " + _result.BarcodeFormat;
             DebugController.Log(this, result);
-            AppController.Instance.OnQrScanned(_result.Text);
+            appCoordinator.OnQrScanned(_result.Text);
         }
     
         private Color32[] ConvertGrayscaleToColor32(byte[] gray, int width, int height)

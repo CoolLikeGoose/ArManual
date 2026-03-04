@@ -411,12 +411,11 @@ GameObject:
   m_Component:
   - component: {fileID: 112218106}
   - component: {fileID: 112218105}
+  - component: {fileID: 112218110}
+  - component: {fileID: 112218111}
+  - component: {fileID: 112218112}
   - component: {fileID: 112218108}
   - component: {fileID: 112218109}
-  - component: {fileID: 112218107}
-  - component: {fileID: 112218110}
-  - component: {fileID: 112218112}
-  - component: {fileID: 112218113}
   - component: {fileID: 112218104}
   m_Layer: 0
   m_Name: AppManager
@@ -452,13 +451,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Controllers.AppController
   enableDebugLog: 1
   enableDebugOverlay: 1
-  qrController: {fileID: 112218107}
-  markerManager: {fileID: 112218112}
-  markerDetector: {fileID: 112218110}
-  interactionManager: {fileID: 112218113}
-  qrScannerPanel: {fileID: 165003897}
-  loadingPanel: {fileID: 891929851}
-  arPanel: {fileID: 591795328}
 --- !u!4 &112218106
 Transform:
   m_ObjectHideFlags: 0
@@ -474,19 +466,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &112218107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 112218103}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c278443d2ecedd40a7752ef0712be50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::QrScanner
-  cameraController: {fileID: 112218109}
 --- !u!114 &112218108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,13 +500,29 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112218103}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f1ebf767022d11428f52e8c103142c7, type: 3}
+  m_Script: {fileID: 11500000, guid: 5bc7d51a54faef24abac928861e50c66, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ArUcoDetector
-  dictionaryId: 8
-  cameraController: {fileID: 112218109}
+  m_EditorClassIdentifier: Assembly-CSharp::Core.AppCoordinator
+  stateMachine: {fileID: 112218111}
+  qrController: {fileID: 2096420185}
+  markerManager: {fileID: 2096420184}
+  markerDetector: {fileID: 2096420183}
+  interactionManager: {fileID: 2096420182}
+  apiLoader: {fileID: 112218108}
+--- !u!114 &112218111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112218103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 850886c8244a7384083db55248ada7c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.AppStateMachine
 --- !u!114 &112218112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,29 +530,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112218103}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 616701cc17331a64f96b6340093470de, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ba9239dbc8bb454eb403cef0691dcb9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MarkerManager
-  arUcoDetector: {fileID: 112218110}
-  origin: {fileID: 1153520683}
-  arAnchorManager: {fileID: 1153520685}
-  markerControllerPrefab: {fileID: 7903358008246817888, guid: 1bf451d17953ff942883b5a4becad3a6, type: 3}
---- !u!114 &112218113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 112218103}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 911e3590f969a0c4eb130e200e3c8b36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionManager
-  maxRaycastDistance: 3
-  detailedViewController: {fileID: 1497599568}
+  m_EditorClassIdentifier: Assembly-CSharp::Core.AppUiStateView
+  stateMachine: {fileID: 112218111}
+  qrScannerPanel: {fileID: 165003897}
+  loadingPanel: {fileID: 891929851}
+  arPanel: {fileID: 591795328}
 --- !u!1 &150627848
 GameObject:
   m_ObjectHideFlags: 0
@@ -926,8 +907,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 112218105}
-        m_TargetAssemblyTypeName: Controllers.AppController, Assembly-CSharp
+      - m_Target: {fileID: 112218110}
+        m_TargetAssemblyTypeName: Core.AppCoordinator, Assembly-CSharp
         m_MethodName: OnExitBtn
         m_Mode: 1
         m_Arguments:
@@ -1325,7 +1306,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000035387828}
+  m_AnchoredPosition: {x: 0, y: -0.000011188993}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &570694026
@@ -1366,6 +1347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99427f6342aaf974abd1a443dba49c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScenarioList
+  appCoordinator: {fileID: 112218110}
   scenarioPrefab: {fileID: 8283761277142306214, guid: 1b64bf1a4b06fdf4da8a5bd842947692, type: 3}
   headerPrefab: {fileID: 8509195734724373102, guid: d6b0770b47133004bb10aaa7a5e48a10, type: 3}
 --- !u!1 &591795328
@@ -1996,7 +1978,7 @@ MonoBehaviour:
     sem nulla ut mi. Curabitur consectetur lobortis rutrum. Phasellus efficitur ligula
     eu semper blandit. Maecenas condimentum id dui nec tempor.
 
-    
+
 
     Ut condimentum
     felis augue, id tincidunt risus posuere auctor. Ut semper nunc at ante feugiat,
@@ -3272,7 +3254,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 705917689}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999941
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4342,6 +4324,100 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2055740497}
   m_CullTransparentMesh: 1
+--- !u!1 &2096420181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2096420186}
+  - component: {fileID: 2096420185}
+  - component: {fileID: 2096420183}
+  - component: {fileID: 2096420184}
+  - component: {fileID: 2096420182}
+  m_Layer: 0
+  m_Name: SubSystems
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2096420182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096420181}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 911e3590f969a0c4eb130e200e3c8b36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionManager
+  maxRaycastDistance: 3
+  detailedViewController: {fileID: 1497599568}
+--- !u!114 &2096420183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096420181}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f1ebf767022d11428f52e8c103142c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArUcoDetector
+  dictionaryId: 8
+  cameraController: {fileID: 112218109}
+--- !u!114 &2096420184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096420181}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616701cc17331a64f96b6340093470de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarkerManager
+  apiLoader: {fileID: 112218108}
+  arUcoDetector: {fileID: 2096420183}
+  origin: {fileID: 1153520683}
+  arAnchorManager: {fileID: 1153520685}
+  markerControllerPrefab: {fileID: 7903358008246817888, guid: 1bf451d17953ff942883b5a4becad3a6, type: 3}
+--- !u!114 &2096420185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096420181}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c278443d2ecedd40a7752ef0712be50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QrScanner
+  cameraController: {fileID: 112218109}
+  appCoordinator: {fileID: 112218110}
+--- !u!4 &2096420186
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096420181}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 834.0912, y: 479.89594, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2131777482
 GameObject:
   m_ObjectHideFlags: 0
@@ -4483,6 +4559,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 112218106}
+  - {fileID: 2096420186}
   - {fileID: 1359513119}
   - {fileID: 522623413}
   - {fileID: 1153520684}

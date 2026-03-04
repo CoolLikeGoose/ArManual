@@ -11,11 +11,14 @@ namespace DebugTools
     
         private List<string> logs = new List<string>();
         public DebugPanelController debugPanel;
-
+        
         private static bool _enableDebug = true;
 
         private void Awake()
         {
+            if (Instance != null && Instance != this) 
+                Destroy(gameObject);
+            
             Instance = this;
         }
 
