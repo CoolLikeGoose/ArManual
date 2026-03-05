@@ -59,7 +59,7 @@ namespace Tracking.Markers
 
         private void Update()
         {
-            if (isVisible & Time.time - lastSeenTime > hideAfter)
+            if (isVisible && Time.time - lastSeenTime > hideAfter)
             {
                 isVisible = false;
                 root.SetActive(false);

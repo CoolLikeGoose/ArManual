@@ -9,7 +9,6 @@ namespace Tracking.InteractionPoints
     {
         [Header("Settings")]
         [SerializeField] private float maxRaycastDistance = 3f;
-        // [Header("Debug")]
 
         [Header("Dependencies")]
         [SerializeField] private DetailedViewController detailedViewController;

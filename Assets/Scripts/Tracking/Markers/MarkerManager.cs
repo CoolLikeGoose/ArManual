@@ -25,8 +25,10 @@ namespace Tracking.Markers
     
         // Avoiding multiple IP creation with the same ID
         private Queue<MarkerDetectionResult> pendingMarkers = new();
+        // Avoiding pending markers creation after scenario change
+        private int scenarioToken = 0;
     
-        private bool isInitialzed = false;
+        private bool isInitialized = false;
 
         private void OnEnable()
         {
@@ -47,7 +49,7 @@ namespace Tracking.Markers
         public void LoadScenario(ScenarioModel scenarioModel)
         {
             DebugController.Log(this, "Loading scenario: " + scenarioModel.name);
-            isInitialzed = false;
+            isInitialized = false;
             Clear();
         
             List<int> usedArucoIds = new List<int>();
@@ -61,44 +63,41 @@ namespace Tracking.Markers
                 if (!trackPoints.Values.Contains(trackPoint))
                 {
                     trackPoints.Add(trackPoint.arucoID, trackPoint);
-                    // Log("Added to trackpoints");
                 }
             
                 // For whitelist
                 if (!usedArucoIds.Contains(trackPoint.arucoID))
                 {
                     usedArucoIds.Add(trackPoint.arucoID);
-                    // Log("Added to used arucoids");
                 }
             
                 // Load interaction points for future creation
                 if (!interactionPoints.ContainsKey(trackPoint.arucoID))
                 {
                     interactionPoints[trackPoint.arucoID] = new List<InteractionPointModel>();
-                    // Log("Initialized interaction points for new arucoid");
                 }
                 interactionPoints[trackPoint.arucoID].Add(iPoint);
-                // Log("Added to interaction points");
             } 
         
             arUcoDetector.SetWhitelist(usedArucoIds);
-            isInitialzed = true;
-            DebugController.Log(this, $"Loaded scenario: {scenarioModel.scenarioID} with {interactionPoints.Count} interactions");
+            isInitialized = true;
+            DebugController.Log(this, 
+                $"Loaded scenario: {scenarioModel.scenarioID} with {interactionPoints.Count} interactions");
         }
 
         private void OnMarkersDetected(List<MarkerDetectionResult> markers)
         {
-            if (!isInitialzed) return;
+            if (!isInitialized) return;
         
             foreach (var marker in markers)
             {
                 if (!markerControllers.ContainsKey(marker.ID))
                 {
-                    if (!pendingMarkers.Contains(marker))
-                    {
-                        pendingMarkers.Enqueue(marker);
-                        CreateMarkerController(marker);
-                    }
+                    if (pendingMarkers.Contains(marker)) 
+                        continue;
+                    
+                    pendingMarkers.Enqueue(marker);
+                    CreateMarkerController(marker);
                 }
                 else
                 {
@@ -109,18 +108,32 @@ namespace Tracking.Markers
 
         private async void CreateMarkerController(MarkerDetectionResult marker)
         {
+            int currentToken = scenarioToken;
+            
             float markerSize = trackPoints[marker.ID].sizeCm / 100f;
             if (!arUcoDetector.EstimatePose(marker.ID, markerSize, out Vector3 rotation, out Vector3 translation))
             {
                 DebugController.Log(this, "Failed to estimate position for marker: " + marker.ID);
+                pendingMarkers.Dequeue();
                 return;
             }
 
             Pose worldPose = OpenCvToUnityWorldPose(rotation, translation);
             var result = await arAnchorManager.TryAddAnchorAsync(worldPose);
+            
+            // Check if a scenario changed while waiting for anchor creation
+            if (currentToken != scenarioToken)
+            {
+                DebugController.Log(this, "Scenario changed while waiting for anchor creation");
+                if (result.status.IsSuccess())
+                    Destroy(result.value.gameObject);
+                return;
+            }
+            
             if (!result.status.IsSuccess())
             {
                 DebugController.Log(this, "Failed to add anchor for marker: " + marker.ID);
+                pendingMarkers.Dequeue();
                 return;
             }
 
@@ -219,6 +232,8 @@ namespace Tracking.Markers
     
         public void Clear()
         {
+            scenarioToken++;
+            
             foreach (var controller in markerControllers.Values)
             {
                 if (controller != null) controller.Cleanup();
@@ -232,7 +247,6 @@ namespace Tracking.Markers
             interactionPoints.Clear();
             markerControllers.Clear();
             trackPoints.Clear();
-            
             pendingMarkers.Clear();
         }
     }
