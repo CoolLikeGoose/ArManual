@@ -4,7 +4,6 @@ using Models;
 using Network;
 using Tracking.InteractionPoints;
 using Tracking.Markers;
-using UI;
 using UnityEngine;
 
 namespace Core
@@ -55,17 +54,17 @@ namespace Core
         {
             stateMachine.SetState(AppState.Display);
         
+            //TODO: implement subsystems controller?
             markerDetector.enabled = true;
             markerManager.enabled = true;
             interactionManager.enabled = true;
         
             scenarioManager.SetManual(data);
         
-            //TODO: proper scenario manager
-            markerManager.LoadScenario(data.scenarios[0]);
+            markerManager.LoadScenario(scenarioManager.SelectFirstScenario());
         }
 
-        public void OnScenarioLoaded(ScenarioModel data)
+        private void OnScenarioLoaded(ScenarioModel data)
         {
             markerManager.LoadScenario(data);
         }

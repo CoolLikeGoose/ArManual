@@ -64,6 +64,12 @@ namespace Core
             PopulateScenarioList();
         }
 
+        public ScenarioModel SelectFirstScenario()
+        {
+            currentScenario = groups[0].scenarios[0];
+            return currentScenario;
+        }
+
         private void PopulateScenarioList()
         {
             scenarioList.PopulateList(groups);
@@ -71,6 +77,9 @@ namespace Core
 
         private void ChangeScenario(ScenarioModel scenario)
         {
+            if (currentScenario == scenario) 
+                return;
+            
             currentScenario = scenario;
             OnScenarioChanged?.Invoke(scenario);
         }

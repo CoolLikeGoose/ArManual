@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Core;
 using DebugTools;
 using DOT;
 using Models;
@@ -24,6 +23,7 @@ namespace UI
             content = GetComponent<Transform>();
         }
         
+        // ReSharper disable Unity.PerformanceAnalysis
         public void PopulateList(List<ScenarioGroup> scenarioGroups)
         {
             ClearContent();
