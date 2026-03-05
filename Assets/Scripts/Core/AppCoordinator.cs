@@ -13,21 +13,24 @@ namespace Core
     {
         [Header("Dependencies")]
         [SerializeField] private AppStateMachine stateMachine;
+        [SerializeField] private APILoader apiLoader;
+        [SerializeField] private ScenarioManager scenarioManager;
         
         [SerializeField] private QrScanner qrController;
         [SerializeField] private MarkerManager markerManager;
         [SerializeField] private ArUcoDetector markerDetector;
         [SerializeField] private InteractionManager interactionManager;
-        [SerializeField] private APILoader apiLoader;
 
         private void OnEnable()
         {
             apiLoader.OnManualLoaded += OnInstructionLoaded;
+            scenarioManager.OnScenarioChanged += OnScenarioLoaded;
         }
 
         private void OnDisable()
         {
             apiLoader.OnManualLoaded -= OnInstructionLoaded;
+            scenarioManager.OnScenarioChanged -= OnScenarioLoaded;
         }
 
         private void Start()
@@ -56,7 +59,7 @@ namespace Core
             markerManager.enabled = true;
             interactionManager.enabled = true;
         
-            ScenarioList.Instance.Populate(data);
+            scenarioManager.SetManual(data);
         
             //TODO: proper scenario manager
             markerManager.LoadScenario(data.scenarios[0]);
@@ -70,6 +73,8 @@ namespace Core
         public void OnExitBtn()
         {
             markerManager.Clear();
+            scenarioManager.ClearContent();
+            
             markerDetector.enabled = false;
             markerManager.enabled = false;
             interactionManager.enabled = false;

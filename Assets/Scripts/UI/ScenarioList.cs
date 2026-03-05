@@ -1,6 +1,8 @@
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using Core;
 using DebugTools;
+using DOT;
 using Models;
 using TMPro;
 using UnityEngine;
@@ -10,64 +12,48 @@ namespace UI
 {
     public class ScenarioList : MonoBehaviour
     {
-        //TODO: get rid of singleton
-        public static ScenarioList Instance { get; private set; }
-        
-        [SerializeField] private AppCoordinator appCoordinator;
-    
         [SerializeField] private GameObject scenarioPrefab;
         [SerializeField] private GameObject headerPrefab;
     
-        private Transform _content;
+        private Transform content;
+        
+        public event Action<ScenarioModel> OnScenarioChanged; 
 
         private void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-        
-            _content = GetComponent<Transform>();
+            content = GetComponent<Transform>();
         }
-
-        public void Populate(ManualModel manualModel)
+        
+        public void PopulateList(List<ScenarioGroup> scenarioGroups)
         {
             ClearContent();
-        
-            //TODO: Good sort
-            var groups = manualModel.scenarios
-                .GroupBy(s => s.category)
-                .OrderBy(g => g.Key);
-
-            foreach (var group in groups)
+            
+            foreach (var group in scenarioGroups)
             {
-                var header = Instantiate(headerPrefab, _content);
+                var header = Instantiate(headerPrefab, content);
                 var headerText = header.GetComponent<TextMeshProUGUI>();
-                if (headerText) headerText.text = group.Key;
+                if (headerText) headerText.text = group.category;
 
-                var items = group.OrderBy(s => s.order);
-
-                foreach (var scenario in items)
+                foreach (var scenario in group.scenarios)
                 {
-                    var item = Instantiate(scenarioPrefab, _content);
+                    var item = Instantiate(scenarioPrefab, content);
                     item.GetComponentInChildren<TextMeshProUGUI>().text = scenario.name;
 
                     item.GetComponent<Button>().onClick.AddListener(() =>
                         {
                             DebugController.Log(this, "scenario clicked: " + scenario.name);
-                            //TODO: create scenario manager
-                            appCoordinator.OnScenarioLoaded(scenario);
+                            OnScenarioChanged?.Invoke(scenario);
                         }
                     );
                 }
             }
         }
 
-        private void ClearContent()
+        public void ClearContent()
         {
-            for (int i = _content.childCount - 1; i >= 0; i--)
+            for (int i = content.childCount - 1; i >= 0; i--)
             {
-                Destroy(_content.GetChild(i).gameObject);
+                Destroy(content.GetChild(i).gameObject);
             }
         }
     }

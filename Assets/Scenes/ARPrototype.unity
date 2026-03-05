@@ -506,11 +506,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.AppCoordinator
   stateMachine: {fileID: 112218111}
+  apiLoader: {fileID: 112218108}
+  scenarioManager: {fileID: 2096420187}
   qrController: {fileID: 2096420185}
   markerManager: {fileID: 2096420184}
   markerDetector: {fileID: 2096420183}
   interactionManager: {fileID: 2096420182}
-  apiLoader: {fileID: 112218108}
 --- !u!114 &112218111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1306,7 +1307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000011188993}
+  m_AnchoredPosition: {x: 0, y: -0.000018026973}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &570694026
@@ -1347,7 +1348,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99427f6342aaf974abd1a443dba49c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScenarioList
-  appCoordinator: {fileID: 112218110}
   scenarioPrefab: {fileID: 8283761277142306214, guid: 1b64bf1a4b06fdf4da8a5bd842947692, type: 3}
   headerPrefab: {fileID: 8509195734724373102, guid: d6b0770b47133004bb10aaa7a5e48a10, type: 3}
 --- !u!1 &591795328
@@ -3254,7 +3254,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 705917689}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999941
+  m_Size: 0.99541295
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4337,6 +4337,7 @@ GameObject:
   - component: {fileID: 2096420183}
   - component: {fileID: 2096420184}
   - component: {fileID: 2096420182}
+  - component: {fileID: 2096420187}
   m_Layer: 0
   m_Name: SubSystems
   m_TagString: Untagged
@@ -4418,6 +4419,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2096420187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096420181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e09ddb3bc40c894cb81c4e6d38605db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.ScenarioManager
+  scenarioList: {fileID: 570694027}
 --- !u!1 &2131777482
 GameObject:
   m_ObjectHideFlags: 0
