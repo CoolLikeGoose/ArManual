@@ -9,6 +9,7 @@ namespace Core
     
         [Header("Settings")]
         [SerializeField] public bool enableDebugLog = true;
+        [SerializeField] public bool enableStatusPanel = true;
         [SerializeField] public bool enableDebugOverlay = true;
 
         private void Awake()

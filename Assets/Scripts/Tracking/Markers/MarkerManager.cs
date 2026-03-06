@@ -117,7 +117,7 @@ namespace Tracking.Markers
                 pendingMarkers.Dequeue();
                 return;
             }
-
+            
             Pose worldPose = OpenCvToUnityWorldPose(rotation, translation);
             var result = await arAnchorManager.TryAddAnchorAsync(worldPose);
             
@@ -143,9 +143,10 @@ namespace Tracking.Markers
             MarkerController markerController = markerControllerObj.GetComponent<MarkerController>();
         
             markerController.Initialize(marker.ID, anchor, interactionPoints[marker.ID], Camera.main);
-        
+            
             markerControllers[marker.ID] = markerController;
-        
+            
+            StatusManager.Instance.UpdateMarker(marker.ID, true, marker.sizeInPixels, translation.z);
             pendingMarkers.Dequeue();
             DebugController.Log(this, 
                 "Created marker_" + marker.ID + 
@@ -155,6 +156,7 @@ namespace Tracking.Markers
 
         private void UpdateMarkerController(MarkerDetectionResult marker)
         {
+            StatusManager.Instance.UpdateMarker(marker.ID, marker.sizeInPixels);
             markerControllers[marker.ID].OnMarkerSeen();
         }
 

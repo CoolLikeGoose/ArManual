@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DebugTools;
 using Models;
 using Tracking.InteractionPoints;
 using UnityEngine;
@@ -53,6 +54,7 @@ namespace Tracking.Markers
             if (!isVisible)
             {
                 isVisible = true;
+                StatusManager.Instance.UpdateMarker(MarkerID, true);
                 root.SetActive(true);
             }
         }
@@ -62,6 +64,7 @@ namespace Tracking.Markers
             if (isVisible && Time.time - lastSeenTime > hideAfter)
             {
                 isVisible = false;
+                StatusManager.Instance.UpdateMarker(MarkerID, false);
                 root.SetActive(false);
             }
         }
