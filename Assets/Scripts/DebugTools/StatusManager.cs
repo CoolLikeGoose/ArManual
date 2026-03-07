@@ -96,6 +96,27 @@ namespace DebugTools
             
             markersInfo[markerID].screenSize = screenSize;
         }
+        
+        public void UpdateMarker(int markerID, bool isActive, float screenSize)
+        {
+            if (!markersInfo.ContainsKey(markerID))
+            {
+                markersInfo.Add(markerID, new MarkerDebugInfo());
+            }
+            
+            markersInfo[markerID].isActive = isActive;
+            markersInfo[markerID].screenSize = screenSize;
+        }
+        
+        public void UpdateMarker(int markerID, Vector3 relativePosition)
+        {
+            if (!markersInfo.ContainsKey(markerID))
+            {
+                markersInfo.Add(markerID, new MarkerDebugInfo());
+            }
+            
+            markersInfo[markerID].zDistance = relativePosition.z;
+        }
 
         private void UpdateDisplay()
         {

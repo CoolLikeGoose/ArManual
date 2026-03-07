@@ -15,48 +15,102 @@ namespace Tracking.Markers
 
         [Header("Dependencies")]
         [SerializeField] private GameObject iPointPrefab;
+        [SerializeField] private GameObject markerCollapsed;
         [SerializeField] private GameObject debugAnchorPrefab;
 
         private ARAnchor anchor;
         private GameObject root;
+        private GameObject iPointsHolder;
+        private GameObject markerPlaceholder;
+        
         private List<InteractionPointController> interactionPoints = new();
+
+        private const float CollapseThreshold = 30f;
+        private const float CollapseThresholdMin = 25f; // Prevent flickering
+        private bool? isCollapsed;
+        
+        private const float RecalibrationThreshold = 1f;
         private bool isVisible = true;
         private float lastSeenTime;
-    
-        public int MarkerID { get; private set; }
-        public ARAnchor Anchor => anchor;
+        private float lastSeenSize;
+        private float closestSeenSize;
 
-        public void Initialize(int markerID, ARAnchor anchor, List<InteractionPointModel> iPoints, Camera camera)
+        private int markerID { get; set; }
+
+        public void Initialize(int markerID, ARAnchor anchor, List<InteractionPointModel> iPoints, 
+            Camera camera, float sizeInPixels)
         {
-            MarkerID = markerID;
+            this.markerID = markerID;
             this.anchor = anchor;
+            lastSeenSize = sizeInPixels;
+            closestSeenSize = sizeInPixels;
         
-            root = new GameObject("MarkerRoot_" + markerID);
+            root = new GameObject("Marker_" + markerID);
             root.transform.SetParent(anchor.transform, false);
+
+            // Holds collapsed marker
+            markerPlaceholder = Instantiate(markerCollapsed, root.transform, false);
+            
+            // Holds iPoints as children
+            iPointsHolder = new GameObject("iPointHolder_" + markerID);
+            iPointsHolder.transform.SetParent(root.transform, false);
 
             foreach (InteractionPointModel interactionPointModel in iPoints)
             {
-                GameObject pointObj = Instantiate(iPointPrefab, root.transform);
+                GameObject pointObj = Instantiate(iPointPrefab, iPointsHolder.transform);
                 InteractionPointController point =  pointObj.GetComponent<InteractionPointController>();
                 point.Initialize(interactionPointModel, camera);
                 interactionPoints.Add(point);
             }
         
-            Instantiate(debugAnchorPrefab, root.transform);
-        
+            Instantiate(debugAnchorPrefab, iPointsHolder.transform);
+            
+            UpdateVisibility();
             lastSeenTime = Time.time;
         }
 
         public void OnMarkerSeen()
         {
             lastSeenTime = Time.time;
-
+            
             if (!isVisible)
             {
                 isVisible = true;
-                StatusManager.Instance.UpdateMarker(MarkerID, true);
+                StatusManager.Instance.UpdateMarker(markerID, true);
                 root.SetActive(true);
             }
+        }
+        
+        public bool OnMarkerSeen(float sizeInPixels)
+        {
+            bool needsRecalibration = (sizeInPixels - closestSeenSize) > RecalibrationThreshold;
+            if (needsRecalibration) 
+                closestSeenSize = sizeInPixels;
+            
+            lastSeenSize = sizeInPixels;
+            OnMarkerSeen();
+            UpdateVisibility();
+            
+            return needsRecalibration;
+        }
+
+        private void UpdateVisibility()
+        {
+            bool collapse = lastSeenSize < (isCollapsed == false ? CollapseThresholdMin : CollapseThreshold);
+            
+            if (isCollapsed == collapse) 
+                return;
+
+            isCollapsed = collapse;
+            iPointsHolder.SetActive(!collapse);
+            markerPlaceholder.SetActive(collapse);
+        }
+
+        public void UpdatePosition(Pose worldPose)
+        {
+            // TODO: Create smooth transition
+            root.transform.position = worldPose.position;
+            root.transform.rotation = worldPose.rotation;
         }
 
         private void Update()
@@ -64,14 +118,9 @@ namespace Tracking.Markers
             if (isVisible && Time.time - lastSeenTime > hideAfter)
             {
                 isVisible = false;
-                StatusManager.Instance.UpdateMarker(MarkerID, false);
+                StatusManager.Instance.UpdateMarker(markerID, false);
                 root.SetActive(false);
             }
-        }
-
-        public void CalibrateAnchorPose(Pose pose)
-        {
-        
         }
 
         public void Cleanup()

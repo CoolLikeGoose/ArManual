@@ -109,16 +109,13 @@ namespace Tracking.Markers
         private async void CreateMarkerController(MarkerDetectionResult marker)
         {
             int currentToken = scenarioToken;
-            
-            float markerSize = trackPoints[marker.ID].sizeCm / 100f;
-            if (!arUcoDetector.EstimatePose(marker.ID, markerSize, out Vector3 rotation, out Vector3 translation))
+
+            if (!TryEstimateMarkerPose(marker.ID, out Pose worldPose))
             {
-                DebugController.Log(this, "Failed to estimate position for marker: " + marker.ID);
                 pendingMarkers.Dequeue();
                 return;
             }
             
-            Pose worldPose = OpenCvToUnityWorldPose(rotation, translation);
             var result = await arAnchorManager.TryAddAnchorAsync(worldPose);
             
             // Check if a scenario changed while waiting for anchor creation
@@ -142,11 +139,16 @@ namespace Tracking.Markers
             GameObject markerControllerObj = Instantiate(markerControllerPrefab, anchor.transform);
             MarkerController markerController = markerControllerObj.GetComponent<MarkerController>();
         
-            markerController.Initialize(marker.ID, anchor, interactionPoints[marker.ID], Camera.main);
+            markerController.Initialize(
+                marker.ID, 
+                anchor, 
+                interactionPoints[marker.ID], 
+                Camera.main,
+                marker.sizeInPixels);
             
             markerControllers[marker.ID] = markerController;
             
-            StatusManager.Instance.UpdateMarker(marker.ID, true, marker.sizeInPixels, translation.z);
+            StatusManager.Instance.UpdateMarker(marker.ID, true, marker.sizeInPixels);
             pendingMarkers.Dequeue();
             DebugController.Log(this, 
                 "Created marker_" + marker.ID + 
@@ -157,21 +159,43 @@ namespace Tracking.Markers
         private void UpdateMarkerController(MarkerDetectionResult marker)
         {
             StatusManager.Instance.UpdateMarker(marker.ID, marker.sizeInPixels);
-            markerControllers[marker.ID].OnMarkerSeen();
+            bool needsRecalibration = markerControllers[marker.ID].OnMarkerSeen(marker.sizeInPixels);
+            
+            if (!needsRecalibration)
+                return;
+            
+            // BUG: Possible problem - if the marker will fail to estimate pose, it will still remember lastSeenSize
+            if (!TryEstimateMarkerPose(marker.ID, out Pose worldPose))
+            {
+                DebugController.Log(this, "Failed to estimate position for marker: " + marker.ID);
+            }
+            
+            markerControllers[marker.ID].UpdatePosition(worldPose);
+            DebugController.ConsoleLog(this, "Marker recalibrated " + marker.ID);
         }
 
-        // private void UpdateMarkerPositions(MarkerDetectionResult marker)
-        // {
-        //     float markerSize = trackPoints[marker.ID].sizeCm / 100f;
-        //     if (!arUcoDetector.EstimatePose(marker.ID, markerSize, out Vector3 rotation, out Vector3 translation))
-        //     {
-        //         Log("Failed to estimate position for marker: " + marker.ID);
-        //         return;
-        //     }
-        //     
-        //     var obj = markerControllers[marker.ID];
-        //     obj.transform.SetWorldPose(OpenCvToUnityWorldPose(rotation, translation));
-        // }
+        private bool TryEstimateMarkerPose(int markerID, out Pose worldPose)
+        {
+            worldPose = Pose.identity;
+
+            if (!trackPoints.TryGetValue(markerID, out var trackPoint))
+            {
+                DebugController.Log(this, "Trackpoint data not found for marker: " + markerID);
+                return false;
+            }
+            
+            float markerSize = trackPoint.sizeCm / 100f;
+            if (!arUcoDetector.EstimatePose(markerID, markerSize, out Vector3 rotation, out Vector3 translation))
+            {
+                DebugController.Log(this, "Failed to estimate position for marker: " + markerID);
+                return false;
+            }
+            
+            StatusManager.Instance.UpdateMarker(markerID, translation);
+            
+            worldPose = OpenCvToUnityWorldPose(rotation, translation);
+            return true;
+        }
     
         // ----------------------------Conversions----------------------------
         private Pose OpenCvToUnityWorldPose(Vector3 rotation, Vector3 translation)
