@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Core;
 using DebugTools;
 using Detection;
 using Models;
@@ -18,6 +19,7 @@ namespace Tracking.Markers
         [SerializeField] private XROrigin origin;
         [SerializeField] private ARAnchorManager arAnchorManager;
         [SerializeField] private GameObject markerControllerPrefab;
+        [SerializeField] private FreezeManager freezeManager;
     
         private Dictionary<int, MarkerController> markerControllers = new();
         private Dictionary<int, TrackPointModel> trackPoints = new();
@@ -146,6 +148,7 @@ namespace Tracking.Markers
                 Camera.main,
                 marker.sizeInPixels);
             
+            markerController.SetFreezeManager(freezeManager);
             markerControllers[marker.ID] = markerController;
             
             StatusManager.Instance.UpdateMarker(marker.ID, true, marker.sizeInPixels);

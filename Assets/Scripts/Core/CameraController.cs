@@ -20,21 +20,26 @@ namespace Core
     
         [Header("Dependencies")]
         [SerializeField] private ARCameraManager cameraManager;
+        [SerializeField] private FreezeManager freezeManager;
     
         public event Action<byte[], int, int> OnFrame;
         public event Action<XRCameraIntrinsics?> OnIntrinsicsUpdated;
     
         public XRCameraIntrinsics? cameraIntrinsics => intrinsics;
         public bool hasIntrinsics => intrinsics.HasValue;
+        
+        private bool isPaused = false;
 
         private void OnEnable()
         {
             cameraManager.frameReceived += OnCameraFrame;
+            freezeManager.OnFreeze += OnPause;  
         }
 
         private void OnDisable()
         {
             cameraManager.frameReceived -= OnCameraFrame;
+            freezeManager.OnFreeze -= OnPause; 
         }
 
         private void ProcessIntrinsics()
@@ -112,7 +117,15 @@ namespace Core
         
             if (Time.time - lastFrame < frameProcessInterval) return;
             lastFrame = Time.time;
+            
+            if (isPaused) return;
+            
             ProcessFrame(eventArgs);
+        }
+
+        private void OnPause(bool pauseStatus)
+        {
+            isPaused = pauseStatus;
         }
     
         private bool IntrinsicsEqual(XRCameraIntrinsics a, XRCameraIntrinsics b)

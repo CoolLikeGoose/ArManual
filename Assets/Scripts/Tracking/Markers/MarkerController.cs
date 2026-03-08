@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Core;
 using DebugTools;
 using Models;
 using Tracking.InteractionPoints;
@@ -17,6 +19,7 @@ namespace Tracking.Markers
         [SerializeField] private GameObject iPointPrefab;
         [SerializeField] private GameObject markerCollapsed;
         [SerializeField] private GameObject debugAnchorPrefab;
+        [SerializeField] private FreezeManager freezeManager;
 
         private ARAnchor anchor;
         private GameObject root;
@@ -34,8 +37,28 @@ namespace Tracking.Markers
         private float lastSeenTime;
         private float lastSeenSize;
         private float closestSeenSize;
+        
+        private bool isPaused = false;
 
         private int markerID { get; set; }
+
+        private void OnEnable()
+        {
+            if (freezeManager != null)
+                freezeManager.OnFreeze += OnPause;
+        }
+        
+        private void OnDisable()
+        {
+            if (freezeManager != null)
+                freezeManager.OnFreeze -= OnPause;
+        }
+
+        public void SetFreezeManager(FreezeManager freezeManager)
+        {
+            this.freezeManager = freezeManager;
+            freezeManager.OnFreeze += OnPause;
+        }
 
         public void Initialize(int markerID, ARAnchor anchor, List<InteractionPointModel> iPoints, 
             Camera camera, float sizeInPixels)
@@ -115,11 +138,26 @@ namespace Tracking.Markers
 
         private void Update()
         {
-            if (isVisible && Time.time - lastSeenTime > hideAfter)
+            if (isVisible && !isPaused && Time.time - lastSeenTime > hideAfter)
             {
                 isVisible = false;
                 StatusManager.Instance.UpdateMarker(markerID, false);
                 root.SetActive(false);
+            }
+        }
+        
+        private void OnPause(bool pauseStatus)
+        {
+            isPaused = pauseStatus;
+            if (isPaused)
+            {
+                iPointsHolder.transform.SetParent(freezeManager.GetHolderTransform(), true);
+            }
+            else
+            {
+                iPointsHolder.transform.SetParent(root.transform, true);
+                iPointsHolder.transform.localPosition = Vector3.zero;
+                iPointsHolder.transform.localRotation = Quaternion.identity;
             }
         }
 
