@@ -1,9 +1,10 @@
 using DebugTools;
+using Tracking.InteractionPoints;
 using UI;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 
-namespace Tracking.InteractionPoints
+namespace Tracking
 {
     public class InteractionManager : MonoBehaviour
     {

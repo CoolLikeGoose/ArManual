@@ -84,7 +84,6 @@ namespace Core
                 outputDimensions = new Vector2Int(image.width, image.height),
             
                 //Select RGBA
-                //TODO:Check with R8
                 outputFormat = TextureFormat.RGBA32,
             
                 //Mirror image

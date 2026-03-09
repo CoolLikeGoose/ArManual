@@ -161,7 +161,7 @@ namespace Tracking.Markers
 
         private void UpdateMarkerController(MarkerDetectionResult marker)
         {
-            StatusManager.Instance.UpdateMarker(marker.ID, marker.sizeInPixels);
+            StatusManager.Instance.UpdateMarker(marker.ID, screenSize:marker.sizeInPixels);
             bool needsRecalibration = markerControllers[marker.ID].OnMarkerSeen(marker.sizeInPixels);
             
             if (!needsRecalibration)
@@ -194,7 +194,7 @@ namespace Tracking.Markers
                 return false;
             }
             
-            StatusManager.Instance.UpdateMarker(markerID, translation);
+            StatusManager.Instance.UpdateMarker(markerID, relativePosition:translation);
             
             worldPose = OpenCvToUnityWorldPose(rotation, translation);
             return true;

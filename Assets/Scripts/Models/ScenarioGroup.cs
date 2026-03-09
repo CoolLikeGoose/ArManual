@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Models;
 
-namespace DOT
+namespace Models
 {
     [Serializable]
     public class ScenarioGroup

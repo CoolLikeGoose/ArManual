@@ -65,57 +65,22 @@ namespace DebugTools
             }
         }
 
-        public void UpdateMarker(int markerID, bool isActive, float screenSize, float zDistance)
+        public void UpdateMarker(int markerID, bool? isActive = null,
+            float? screenSize = null, Vector3? relativePosition = null)
         {
             if (!markersInfo.ContainsKey(markerID))
             {
                 markersInfo.Add(markerID, new MarkerDebugInfo());
             }
             
-            markersInfo[markerID].isActive = isActive;
-            markersInfo[markerID].screenSize = screenSize;
-            markersInfo[markerID].zDistance = zDistance;    
-        }
-
-        public void UpdateMarker(int markerID, bool isActive)
-        {
-            if (!markersInfo.ContainsKey(markerID))
-            {
-                markersInfo.Add(markerID, new MarkerDebugInfo());
-            }
+            if (isActive.HasValue)
+                markersInfo[markerID].isActive = isActive.Value;
             
-            markersInfo[markerID].isActive = isActive;
-        }
-        
-        public void UpdateMarker(int markerID, float screenSize)
-        {
-            if (!markersInfo.ContainsKey(markerID))
-            {
-                markersInfo.Add(markerID, new MarkerDebugInfo());
-            }
+            if (screenSize.HasValue)
+                markersInfo[markerID].screenSize = screenSize.Value;
             
-            markersInfo[markerID].screenSize = screenSize;
-        }
-        
-        public void UpdateMarker(int markerID, bool isActive, float screenSize)
-        {
-            if (!markersInfo.ContainsKey(markerID))
-            {
-                markersInfo.Add(markerID, new MarkerDebugInfo());
-            }
-            
-            markersInfo[markerID].isActive = isActive;
-            markersInfo[markerID].screenSize = screenSize;
-        }
-        
-        public void UpdateMarker(int markerID, Vector3 relativePosition)
-        {
-            if (!markersInfo.ContainsKey(markerID))
-            {
-                markersInfo.Add(markerID, new MarkerDebugInfo());
-            }
-            
-            markersInfo[markerID].zDistance = relativePosition.z;
+            if (relativePosition.HasValue)
+                markersInfo[markerID].zDistance = relativePosition.Value.z;    
         }
 
         private void UpdateDisplay()

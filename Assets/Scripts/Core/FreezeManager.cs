@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using DebugTools;
 using Detection;
-using Tracking.Markers;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,6 +37,12 @@ namespace Core
         private void OnDisable()
         {
             freezeBtn.OnFreezeToggled -= ToggleFreeze;
+
+            if (frozenTexture != null)
+            {
+                Destroy(frozenTexture);
+                frozenTexture = null;
+            }
         }
 
         private void ToggleFreeze()
@@ -63,11 +68,17 @@ namespace Core
             
             yield return new WaitForEndOfFrame();
             
-            Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-            texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-            texture.Apply();
+            if (frozenTexture == null ||
+                frozenTexture.width != Screen.width ||
+                frozenTexture.height != Screen.height)
+            {
+                if (frozenTexture != null) 
+                    Destroy(frozenTexture);
+                frozenTexture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+            }
+            frozenTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+            frozenTexture.Apply();
             
-            frozenTexture = texture;
             frozenOverlay.texture = frozenTexture;
             frozenOverlay.gameObject.SetActive(true);
             

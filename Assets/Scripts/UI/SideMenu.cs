@@ -7,22 +7,22 @@ namespace UI
     {
         [SerializeField] private GameObject openButton;
     
-        private RectTransform _panel;
+        private RectTransform panel;
 
-        private float _width;
+        private float width;
         private const float Speed = 10f;
-        private bool _visible = false;
+        private bool visible = false;
 
         private void Start()
         {
-            _panel = GetComponent<RectTransform>();
-            _width = _panel.rect.width;
+            panel = GetComponent<RectTransform>();
+            width = panel.rect.width;
         }
 
         public void Toggle()
         {
-            openButton.SetActive(_visible);
-            _visible = !_visible;
+            openButton.SetActive(visible);
+            visible = !visible;
             StopAllCoroutines();
             StartCoroutine(Animate());
         }
@@ -30,24 +30,24 @@ namespace UI
         public void InstantClose()
         {
             openButton.SetActive(true);
-            _visible = false;
+            visible = false;
             StopAllCoroutines();
-            _panel.anchoredPosition = new Vector2(-_width, _panel.anchoredPosition.y);
+            panel.anchoredPosition = new Vector2(-width, panel.anchoredPosition.y);
         }
 
         private IEnumerator Animate()
         {
-            Vector2 target = _visible
-                ? new Vector2(0, _panel.anchoredPosition.y)
-                : new Vector2(-_width, _panel.anchoredPosition.y);
+            Vector2 target = visible
+                ? new Vector2(0, panel.anchoredPosition.y)
+                : new Vector2(-width, panel.anchoredPosition.y);
 
-            while (Vector2.Distance(_panel.anchoredPosition, target) > 0.5f)
+            while (Vector2.Distance(panel.anchoredPosition, target) > 0.5f)
             {
-                _panel.anchoredPosition = Vector2.Lerp(_panel.anchoredPosition, target, Time.deltaTime * Speed);
+                panel.anchoredPosition = Vector2.Lerp(panel.anchoredPosition, target, Time.deltaTime * Speed);
                 yield return null;
             }
         
-            _panel.anchoredPosition = target;
+            panel.anchoredPosition = target;
         }
     }
 }

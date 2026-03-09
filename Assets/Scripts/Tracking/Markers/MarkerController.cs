@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Core;
 using DebugTools;
@@ -54,10 +53,10 @@ namespace Tracking.Markers
                 freezeManager.OnFreeze -= OnPause;
         }
 
-        public void SetFreezeManager(FreezeManager freezeManager)
+        public void SetFreezeManager(FreezeManager freezeManagerRef)
         {
-            this.freezeManager = freezeManager;
-            freezeManager.OnFreeze += OnPause;
+            freezeManager = freezeManagerRef;
+            freezeManagerRef.OnFreeze += OnPause;
         }
 
         public void Initialize(int markerID, ARAnchor anchor, List<InteractionPointModel> iPoints, 

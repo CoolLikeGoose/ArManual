@@ -198,7 +198,7 @@ namespace Detection
             float normX = pixelCoords.x / cameraWidth;
             float normY = pixelCoords.y / cameraHeight;
 
-            // Обрезается высота
+            // crop by height
             float visibleHeight = cameraWidth / screenAspect;
             float cropTop = (cameraHeight - visibleHeight) * 0.5f;
         
