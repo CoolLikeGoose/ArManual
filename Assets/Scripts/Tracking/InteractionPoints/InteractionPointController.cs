@@ -61,13 +61,13 @@ namespace Tracking.InteractionPoints
 
         private void Update()
         {
+            if (!cam) 
+                return;
+            
             // Looking toward the camera
-            if (cam != null)
-            {
-                Vector3 dirToCamera = cam.transform.position - transform.position;
-                Quaternion targetRotation = Quaternion.LookRotation(-dirToCamera);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * billBoardSpeed);
-            }
+            Vector3 dirToCamera = cam.transform.position - transform.position;
+            Quaternion targetRotation = Quaternion.LookRotation(-dirToCamera);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * billBoardSpeed);
         }
     }
 }

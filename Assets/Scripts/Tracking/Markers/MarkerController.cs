@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Core;
 using DebugTools;
+using ManualSession;
 using Models;
 using Tracking.InteractionPoints;
 using UnityEngine;
@@ -38,6 +38,7 @@ namespace Tracking.Markers
         private float closestSeenSize;
         
         private bool isPaused = false;
+        private bool isHidden = false;
 
         private int markerID { get; set; }
 
@@ -95,11 +96,9 @@ namespace Tracking.Markers
         {
             lastSeenTime = Time.time;
             
-            if (!isVisible)
+            if (!isHidden && !isVisible)
             {
-                isVisible = true;
-                StatusManager.Instance.UpdateMarker(markerID, true);
-                root.SetActive(true);
+                ToggleVisibility(true);
             }
         }
         
@@ -137,11 +136,12 @@ namespace Tracking.Markers
 
         private void Update()
         {
-            if (isVisible && !isPaused && Time.time - lastSeenTime > hideAfter)
+            if (!isHidden && 
+                isVisible && 
+                !isPaused && 
+                Time.time - lastSeenTime > hideAfter)
             {
-                isVisible = false;
-                StatusManager.Instance.UpdateMarker(markerID, false);
-                root.SetActive(false);
+                ToggleVisibility(false);
             }
         }
         
@@ -160,10 +160,36 @@ namespace Tracking.Markers
             }
         }
 
+        private void ToggleVisibility(bool enable)
+        {
+            isVisible = enable;
+            StatusManager.Instance.UpdateMarker(markerID, enable);
+            root.SetActive(enable);
+        }
+
+        public void TemporarilyToggleVisibility(bool enable)
+        {
+            if (isHidden == enable) 
+                return;
+            
+            isHidden = enable;
+            
+            if (isHidden && isVisible) 
+                ToggleVisibility(enable);
+        }
+
+        public void ShowOnly(int interactionPointID)
+        {
+            foreach (var iPController in interactionPoints)
+            {
+                iPController.gameObject.SetActive(iPController.iPointId == interactionPointID);
+            }
+        }
+
         public void Cleanup()
         {
-            if (root != null) Destroy(root);
-            if (anchor != null) Destroy(anchor.gameObject);
+            if (root) Destroy(root);
+            if (anchor) Destroy(anchor.gameObject);
         }
     }
 }

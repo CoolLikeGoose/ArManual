@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Core;
 using DebugTools;
 using Detection;
+using ManualSession;
 using Models;
 using Network;
 using Unity.XR.CoreUtils;
@@ -198,6 +198,38 @@ namespace Tracking.Markers
             
             worldPose = OpenCvToUnityWorldPose(rotation, translation);
             return true;
+        }
+
+        // ------------------------StepManuals Section------------------------
+        public int ShowOnly(int interactionPointID)
+        {
+            int foundMarker = -1;
+
+            // find the marker that has the interaction point
+            foreach (var kvp in interactionPoints)
+            {
+                if (kvp.Value.Any(ip => ip.interactionPointID == interactionPointID))
+                {
+                    foundMarker = kvp.Key;
+                }
+            }
+            
+            //Hide all markers but the one we want to show
+            foreach (var kvp in markerControllers)
+            {
+                if (kvp.Key == foundMarker)
+                    kvp.Value.TemporarilyToggleVisibility(true);
+                kvp.Value.TemporarilyToggleVisibility(false);
+            }
+            
+            markerControllers[foundMarker].ShowOnly(interactionPointID);
+            
+            return foundMarker;
+        }
+
+        public void ToggleStepMode(bool enable)
+        {
+            
         }
     
         // ----------------------------Conversions----------------------------

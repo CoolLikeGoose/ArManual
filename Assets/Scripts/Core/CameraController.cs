@@ -1,4 +1,5 @@
 using System;
+using ManualSession;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;

@@ -5,7 +5,7 @@ using Models;
 using UI;
 using UnityEngine;
 
-namespace Core
+namespace ManualSession
 {
     public class ScenarioManager : MonoBehaviour
     {

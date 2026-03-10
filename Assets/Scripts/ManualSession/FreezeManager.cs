@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 
-namespace Core
+namespace ManualSession
 {
     public class FreezeManager : MonoBehaviour
     {

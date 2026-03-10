@@ -1,5 +1,7 @@
+using DebugTools;
 using Detection;
 using Enums;
+using ManualSession;
 using Models;
 using Network;
 using Tracking;
@@ -14,6 +16,7 @@ namespace Core
         [SerializeField] private AppStateMachine stateMachine;
         [SerializeField] private APILoader apiLoader;
         [SerializeField] private ScenarioManager scenarioManager;
+        [SerializeField] private StepScenarioManager stepScenarioManager;
         
         [SerializeField] private QrScanner qrController;
         [SerializeField] private MarkerManager markerManager;
@@ -24,12 +27,14 @@ namespace Core
         {
             apiLoader.OnManualLoaded += OnInstructionLoaded;
             scenarioManager.OnScenarioChanged += OnScenarioLoaded;
+            stepScenarioManager.OnStepChanged += OnStepChanged;
         }
 
         private void OnDisable()
         {
             apiLoader.OnManualLoaded -= OnInstructionLoaded;
             scenarioManager.OnScenarioChanged -= OnScenarioLoaded;
+            stepScenarioManager.OnStepChanged -= OnStepChanged;
         }
 
         private void Start()
@@ -60,13 +65,36 @@ namespace Core
             interactionManager.enabled = true;
         
             scenarioManager.SetManual(data);
-        
-            markerManager.LoadScenario(scenarioManager.SelectFirstScenario());
+            
+            ScenarioModel scenario = scenarioManager.SelectFirstScenario();
+            markerManager.LoadScenario(scenario);
+            OnStepManualLoad(scenario);
         }
 
         private void OnScenarioLoaded(ScenarioModel data)
         {
             markerManager.LoadScenario(data);
+            OnStepManualLoad(data);
+        }
+
+        private void OnStepManualLoad(ScenarioModel scenario)
+        {
+            if (scenario.type != (int)ScenarioType.Step)
+            {
+                if (stepScenarioManager.enabled)
+                    stepScenarioManager.enabled = false;
+                return;
+            }
+            
+            DebugController.Log(this, "Step manual is loaded");
+            stepScenarioManager.enabled = true;
+            stepScenarioManager.SetStepManual(scenario);
+        }
+
+        private void OnStepChanged(int nextInteractionPointId)
+        {
+            int currentMarker = markerManager.ShowOnly(nextInteractionPointId);
+            stepScenarioManager.UpdateCurrentMarker(currentMarker);
         }
 
         public void OnExitBtn()

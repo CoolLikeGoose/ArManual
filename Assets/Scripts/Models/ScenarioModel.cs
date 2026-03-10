@@ -8,7 +8,7 @@ namespace Models
     {
         public int scenarioID;
         public string name;
-        public string type;
+        public int type;
         public string category;
         public int order;
         public List<ScenarioInteractionModel> Interactions;

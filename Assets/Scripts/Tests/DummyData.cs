@@ -23,7 +23,7 @@ namespace Tests
                     //Name of scenario
                     name = "Overview",
                     //Type - overview/step
-                    type = "overview",
+                    type = 0,
                     //Category(for prettier display)
                     category = "Basics",
                     order = 1,
@@ -72,7 +72,7 @@ namespace Tests
                 {
                     scenarioID = 10,
                     name = "How to calculate",
-                    type = "step",
+                    type = 1,
                     category = "Maintenance",
                     order = 11,
                     Interactions = new List<ScenarioInteractionModel>()
@@ -98,7 +98,7 @@ namespace Tests
                 {
                     scenarioID = 11,
                     name = "Fix the button",
-                    type = "step",
+                    type = 1,
                     category = "Maintenance",
                     order = 12,
                     Interactions = new List<ScenarioInteractionModel>()
@@ -126,7 +126,7 @@ namespace Tests
                 {
                     scenarioID = 100,
                     name = "Overview",
-                    type = "overview",
+                    type = 0,
                     category = "Overview",
                     Interactions = new List<ScenarioInteractionModel>()
                     {
@@ -166,7 +166,7 @@ namespace Tests
                 {
                     scenarioID = 101,
                     name = "DistanceCheck",
-                    type = "overview",
+                    type = 0,
                     category = "Testing",
                     Interactions = new List<ScenarioInteractionModel>()
                     {
@@ -191,7 +191,7 @@ namespace Tests
                 {
                     scenarioID = 102,
                     name = "TestScenarioName",
-                    type = "overview",
+                    type = 0,
                     category = "Testing",
                     Interactions = new List<ScenarioInteractionModel>()
                     {
@@ -199,6 +199,34 @@ namespace Tests
                         {
                             interactionID = 109,
                             interactionPointID = 100
+                        },
+                    }
+                },
+                new ScenarioModel()
+                {
+                    scenarioID = 103,
+                    name = "Test step guide",
+                    type = 1,
+                    category = "Step guide",
+                    Interactions = new List<ScenarioInteractionModel>()
+                    {
+                        new ScenarioInteractionModel()
+                        {
+                            interactionID = 110,
+                            interactionPointID = 0,
+                            order = 1
+                        },
+                        new ScenarioInteractionModel()
+                        {
+                            interactionID = 110,
+                            interactionPointID = 1,
+                            order = 2
+                        },
+                        new ScenarioInteractionModel()
+                        {
+                            interactionID = 110,
+                            interactionPointID = 2,
+                            order = 3
                         },
                     }
                 }
