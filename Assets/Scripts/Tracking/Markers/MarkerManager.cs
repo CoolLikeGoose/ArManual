@@ -31,6 +31,9 @@ namespace Tracking.Markers
         private int scenarioToken = 0;
     
         private bool isInitialized = false;
+        private bool isShowOnlyMode = false;
+        private int currentMarker = -1;
+        private int currentIPoint = -1;
 
         private void OnEnable()
         {
@@ -157,6 +160,14 @@ namespace Tracking.Markers
                 "Created marker_" + marker.ID + 
                 ", with size: " + trackPoints[marker.ID].sizeCm +
                 ", IPs count: " + interactionPoints[marker.ID].Count);
+
+            if (!isShowOnlyMode) 
+                return;
+
+            if (marker.ID == currentMarker)
+                markerController.ShowOnly(currentIPoint);
+            else
+                markerController.TemporarilyToggleVisibility(true);
         }
 
         private void UpdateMarkerController(MarkerDetectionResult marker)
@@ -203,33 +214,33 @@ namespace Tracking.Markers
         // ------------------------StepManuals Section------------------------
         public int ShowOnly(int interactionPointID)
         {
-            int foundMarker = -1;
+            isShowOnlyMode = true;
+            currentMarker = -1;
+            currentIPoint = interactionPointID;
 
             // find the marker that has the interaction point
-            foreach (var kvp in interactionPoints)
+            var point = apiLoader.LoadIPointByID(interactionPointID);
+            if (point == null)
             {
-                if (kvp.Value.Any(ip => ip.interactionPointID == interactionPointID))
-                {
-                    foundMarker = kvp.Key;
-                }
+                DebugController.Log(this, "Marker was not found for interaction point: " + interactionPointID);
+                return currentMarker;
             }
             
-            //Hide all markers but the one we want to show
-            foreach (var kvp in markerControllers)
+            currentMarker = point.trackpointID;
+            
+            // Hide all markers but the one we want to show
+            foreach (var markerID in markerControllers.Keys)
             {
-                if (kvp.Key == foundMarker)
-                    kvp.Value.TemporarilyToggleVisibility(true);
-                kvp.Value.TemporarilyToggleVisibility(false);
+                markerControllers[markerID].TemporarilyToggleVisibility(markerID != currentMarker);
             }
-            
-            markerControllers[foundMarker].ShowOnly(interactionPointID);
-            
-            return foundMarker;
-        }
 
-        public void ToggleStepMode(bool enable)
-        {
+            // Show only IP we want to show
+            if (markerControllers.ContainsKey(currentMarker))
+            {
+                markerControllers[currentMarker].ShowOnly(interactionPointID);   
+            }
             
+            return currentMarker;
         }
     
         // ----------------------------Conversions----------------------------
@@ -293,6 +304,8 @@ namespace Tracking.Markers
     
         public void Clear()
         {
+            isShowOnlyMode = false;
+            currentIPoint = -1;
             scenarioToken++;
             
             foreach (var controller in markerControllers.Values)

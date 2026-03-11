@@ -167,15 +167,16 @@ namespace Tracking.Markers
             root.SetActive(enable);
         }
 
-        public void TemporarilyToggleVisibility(bool enable)
+        public void TemporarilyToggleVisibility(bool hide)
         {
-            if (isHidden == enable) 
+            DebugController.Log(this, "Temporarily hiding marker: " + markerID + ", hide: " + hide);
+            if (isHidden == hide) 
                 return;
             
-            isHidden = enable;
+            isHidden = hide;
             
             if (isHidden && isVisible) 
-                ToggleVisibility(enable);
+                ToggleVisibility(!hide);
         }
 
         public void ShowOnly(int interactionPointID)

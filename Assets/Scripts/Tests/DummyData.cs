@@ -219,14 +219,20 @@ namespace Tests
                         new ScenarioInteractionModel()
                         {
                             interactionID = 110,
-                            interactionPointID = 1,
+                            interactionPointID = 50,
                             order = 2
                         },
                         new ScenarioInteractionModel()
                         {
-                            interactionID = 110,
-                            interactionPointID = 2,
+                            interactionID = 111,
+                            interactionPointID = 1,
                             order = 3
+                        },
+                        new ScenarioInteractionModel()
+                        {
+                            interactionID = 112,
+                            interactionPointID = 2,
+                            order = 4
                         },
                     }
                 }
@@ -243,6 +249,15 @@ namespace Tests
                 // position = "{\"x\":0,\"y\":0,\"z\":0}",
                 position = new Vector3(0, 0, 0),
                 iPointName = "Front panel",
+                content = "{\"text\":\"Open the panel\"}"
+            },
+            new InteractionPointModel()
+            {
+                interactionPointID = 50,
+                trackpointID = 0,
+                // position = "{\"x\":0,\"y\":0,\"z\":0}",
+                position = new Vector3(0, 0, 0),
+                iPointName = "Front panel-NextStep",
                 content = "{\"text\":\"Open the panel\"}"
             },
             //Front panel backplate

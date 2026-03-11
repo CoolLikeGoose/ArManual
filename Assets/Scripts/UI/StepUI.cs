@@ -1,4 +1,5 @@
 using System;
+using DebugTools;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +21,7 @@ namespace UI
         private int currentStep;
         private int totalSteps;
         
-        private int currentMarkerId;
+        private int currentMarkerId = -1;
         private int previousMarkerId;
         
         public void OnNextStep()
@@ -58,11 +59,8 @@ namespace UI
             previousMarkerId = currentMarkerId;
             currentMarkerId = markerId;
 
-            if (currentMarkerId != previousMarkerId)
-            {
-                stepAssistText.text = $"Find marker {currentMarkerId}. And follow the instructions.";       
-            }
-            stepAssistText.text = "Follow instructions";
+            stepAssistText.text = currentMarkerId != previousMarkerId ? 
+                $"Find marker {currentMarkerId}. And follow the instructions." : "Follow instructions";
         }
 
         public void ToggleStepUI(bool isVisible)

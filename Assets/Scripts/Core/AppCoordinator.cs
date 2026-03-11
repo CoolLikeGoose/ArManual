@@ -81,8 +81,9 @@ namespace Core
         {
             if (scenario.type != (int)ScenarioType.Step)
             {
-                if (stepScenarioManager.enabled)
+                if (stepScenarioManager.enabled) 
                     stepScenarioManager.enabled = false;
+                
                 return;
             }
             

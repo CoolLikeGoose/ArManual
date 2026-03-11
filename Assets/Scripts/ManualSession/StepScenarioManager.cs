@@ -80,6 +80,7 @@ namespace ManualSession
 
         private void StepChangedUpdate()
         {
+            DebugController.Log(this, "Step changed to: " + currentInteraction);
             stepUI.SetCurrentStep(currentInteraction + 1);
             OnStepChanged?.Invoke(currentScenarioInteractions[currentInteraction].interactionPointID);
         } 
