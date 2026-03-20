@@ -1,5 +1,4 @@
 using System;
-using DebugTools;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +8,8 @@ namespace UI
     public class StepUI : MonoBehaviour
     {
         [Header("Dependencies")]
-        [SerializeField] private Button nextStepBtn;
-        [SerializeField] private Button prevStepBtn;
+        [SerializeField] private UButtonController nextStepBtn;
+        [SerializeField] private UButtonController prevStepBtn;
         [SerializeField] private GameObject stepAssistPanel;
         [SerializeField] private TextMeshProUGUI stepCounterText;
         [SerializeField] private TextMeshProUGUI stepAssistText;
@@ -23,7 +22,19 @@ namespace UI
         
         private int currentMarkerId = -1;
         private int previousMarkerId;
-        
+
+        private void OnEnable()
+        {
+            nextStepBtn.OnButtonClicked += OnNextStep;
+            prevStepBtn.OnButtonClicked += OnPrevStep;
+        }
+
+        private void OnDisable()
+        {
+            nextStepBtn.OnButtonClicked -= OnNextStep;
+            prevStepBtn.OnButtonClicked -= OnPrevStep;
+        }
+
         public void OnNextStep()
         {
             OnNextStepClicked?.Invoke();
@@ -44,9 +55,9 @@ namespace UI
         {
             currentStep = newStep;
             UpdateUIText();
-
-            nextStepBtn.interactable = currentStep != totalSteps;
-            prevStepBtn.interactable = currentStep != 1;
+            
+            nextStepBtn.SetInteractable(currentStep != totalSteps);
+            prevStepBtn.SetInteractable(currentStep != 1);
         }
 
         private void UpdateUIText()
@@ -65,8 +76,13 @@ namespace UI
 
         public void ToggleStepUI(bool isVisible)
         {
+            //For layout group update
             nextStepBtn.gameObject.SetActive(isVisible);
             prevStepBtn.gameObject.SetActive(isVisible);
+            
+            nextStepBtn.SetVisibility(isVisible);
+            prevStepBtn.SetVisibility(isVisible);
+                
             stepAssistPanel.SetActive(isVisible);
         }
      }

@@ -18,7 +18,7 @@ namespace ManualSession
         
         [Header("Dependencies-UI")]
         [SerializeField] private RawImage frozenOverlay;
-        [SerializeField] private FreezeBtn freezeBtn;
+        [SerializeField] private UButtonController freezeBtn;
         [SerializeField] private Canvas canvas;
         
         [Header("Dependencies-Holder")]
@@ -31,12 +31,12 @@ namespace ManualSession
         
         private void OnEnable()
         {
-            freezeBtn.OnFreezeToggled += ToggleFreeze;
+            freezeBtn.OnButtonClicked += ToggleFreeze;
         }
         
         private void OnDisable()
         {
-            freezeBtn.OnFreezeToggled -= ToggleFreeze;
+            freezeBtn.OnButtonClicked -= ToggleFreeze;
 
             if (frozenTexture != null)
             {

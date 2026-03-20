@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,13 +6,23 @@ namespace UI
 {
     public class SideMenu : MonoBehaviour
     {
-        [SerializeField] private GameObject openButton;
+        [SerializeField] private UButtonController toggleButton;
     
         private RectTransform panel;
 
         private float width;
         private const float Speed = 10f;
         private bool visible = false;
+
+        private void OnEnable()
+        {
+            toggleButton.OnButtonClicked += Toggle;
+        }
+
+        private void OnDisable()
+        {
+            toggleButton.OnButtonClicked -= Toggle;
+        }
 
         private void Start()
         {
@@ -21,7 +32,6 @@ namespace UI
 
         public void Toggle()
         {
-            openButton.SetActive(visible);
             visible = !visible;
             StopAllCoroutines();
             StartCoroutine(Animate());
@@ -29,7 +39,6 @@ namespace UI
 
         public void InstantClose()
         {
-            openButton.SetActive(true);
             visible = false;
             StopAllCoroutines();
             panel.anchoredPosition = new Vector2(-width, panel.anchoredPosition.y);
