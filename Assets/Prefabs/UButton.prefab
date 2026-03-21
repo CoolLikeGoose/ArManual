@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 148226791656d214dad2304fe4e0dd7d, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -170,7 +170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68345907039464f49b671e768dd44a10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.UButtonController
-  startHidden: 0
   content: {fileID: 3231764791950258858}
   buttonText: {fileID: 5485495016871879440}
   button: {fileID: 4769593632356644237}
