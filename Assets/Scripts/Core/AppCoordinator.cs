@@ -52,7 +52,7 @@ namespace Core
         {
             qrController.enabled = false;
             stateMachine.SetState(AppState.Loading);
-            apiLoader.LoadManual(qrContent);
+            apiLoader.LoadManual(int.Parse(qrContent.Split('-')[1]));
         }
 
         private void OnInstructionLoaded(ManualModel data)

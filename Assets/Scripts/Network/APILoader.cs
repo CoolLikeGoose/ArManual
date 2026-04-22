@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using DebugTools;
 using Models;
 using Tests;
@@ -9,33 +11,47 @@ namespace Network
 {
     public class APILoader : MonoBehaviour
     {
+        [SerializeField] private bool useFakeData = true;
+        
+        private IManualDataSource dataSource;
+        // Backend API 
+        
         public event Action<ManualModel> OnManualLoaded;
-        
-        public void LoadManual(string qrCode)
+        public event Action<string> OnManualLoadFailed;
+        public event Action<InteractionPointModel> OnIPointLoaded;
+
+        private void Awake()
         {
-            DebugController.Log(this,"Loading manual: " + qrCode);
-            StartCoroutine(FakeLoad(qrCode));
+            if (useFakeData)
+                dataSource = new FakeManualDataSource();
+            else
+                dataSource = new APIManualDataSource();
         }
 
-        public InteractionPointModel LoadIPointByID(int id)
+        public async void LoadManual(int manualId)
         {
-            return DummyData.InteractionPoints.Find(iPoint => iPoint.interactionPointID == id);
-        }
-
-        public TrackPointModel LoadTrackPointByID(int id)
-        {
-            return DummyData.TrackPoints.Find(tPoint => tPoint.trackpointID == id);
-        }
-
-        private IEnumerator FakeLoad(string qrCode)
-        {
-            yield return new WaitForSeconds(2f);
-        
-            int manualId = int.Parse(qrCode.Split('-')[1]);
-            ManualModel data = DummyData.Manual2;
+            DebugController.Log(this,"Loading manual: " + manualId);
+            
+            ManualModel data = await dataSource.LoadManual(manualId);
+            
             DebugController.Log(this, "Manual loaded - " + data.name);
             
             OnManualLoaded?.Invoke(data);
+        }
+
+        public Task<List<ScenarioInteractionModel>> LoadScenarioInteractions(int scenarioId)
+        {
+            return dataSource.LoadScenarioInteractions(scenarioId);
+        }
+        
+        public Task<List<InteractionPointModel>> LoadIPointsBatch(List<int> ids)
+        {
+            return dataSource.LoadInteractionPointsBatch(ids);
+        }
+        
+        public Task<List<TrackPointModel>> LoadTrackPointsBatch(List<int> ids)
+        {
+            return dataSource.LoadTrackPointsBatch(ids);
         }
     }
 }

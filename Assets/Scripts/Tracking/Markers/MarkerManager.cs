@@ -24,6 +24,7 @@ namespace Tracking.Markers
         private Dictionary<int, MarkerController> markerControllers = new();
         private Dictionary<int, TrackPointModel> trackPoints = new();
         private Dictionary<int, List<InteractionPointModel>> interactionPoints = new();
+        private Dictionary<int, int> ipToTp = new();
     
         // Avoiding multiple IP creation with the same ID
         private Queue<MarkerDetectionResult> pendingMarkers = new();
@@ -51,38 +52,58 @@ namespace Tracking.Markers
             }
         }
 
-        public void LoadScenario(ScenarioModel scenarioModel)
+        // TODO: maybe add some optimization...
+        public async void LoadScenario(ScenarioModel scenarioModel)
         {
             DebugController.Log(this, "Loading scenario: " + scenarioModel.name);
             isInitialized = false;
             Clear();
         
             List<int> usedArucoIds = new List<int>();
+            
+            //Load interactions for current scenario
+            List<ScenarioInteractionModel> interactions = await apiLoader.LoadScenarioInteractions(scenarioModel.scenarioID); 
 
-            foreach (var interaction in scenarioModel.Interactions)
+            // Collect iPoint Id's and load them
+            var ipIds = interactions
+                .Select(i => i.interactionPointID)
+                .Distinct()
+                .ToList();
+            
+            var iPoints = await apiLoader.LoadIPointsBatch(ipIds);
+            var ipDict = iPoints.ToDictionary(ip => ip.interactionPointID, ip => ip);
+            
+            // Collect trackPoint Id's and load them
+            var tpIds = iPoints
+                .Select(ip => ip.trackpointID)
+                .Distinct()
+                .ToList();
+            
+            var tPoints = await apiLoader.LoadTrackPointsBatch(tpIds);
+            var tpDict = tPoints.ToDictionary(tp => tp.trackpointID, tp => tp);
+            foreach (var trackPointModel in tPoints)
+            {
+                trackPoints.Add(trackPointModel.arucoID, trackPointModel);
+                usedArucoIds.Add(trackPointModel.arucoID);
+            }
+            
+            ipToTp = iPoints.ToDictionary(ip => ip.interactionPointID, ip => ip.trackpointID);
+
+
+            // Load interaction points for future creation
+            foreach (var interaction in interactions)
             {
                 DebugController.Log(this, "Interaction ID: " + interaction.interactionID);
-                InteractionPointModel iPoint = apiLoader.LoadIPointByID(interaction.interactionPointID);
-                TrackPointModel trackPoint = apiLoader.LoadTrackPointByID(iPoint.trackpointID);
-
-                if (!trackPoints.Values.Contains(trackPoint))
+                
+                var iPoint = ipDict[interaction.interactionPointID];
+                var tPoint = tpDict[iPoint.trackpointID];
+                
+                if (!interactionPoints.ContainsKey(tPoint.arucoID))
                 {
-                    trackPoints.Add(trackPoint.arucoID, trackPoint);
+                    interactionPoints[tPoint.arucoID] = new List<InteractionPointModel>();
                 }
-            
-                // For whitelist
-                if (!usedArucoIds.Contains(trackPoint.arucoID))
-                {
-                    usedArucoIds.Add(trackPoint.arucoID);
-                }
-            
-                // Load interaction points for future creation
-                if (!interactionPoints.ContainsKey(trackPoint.arucoID))
-                {
-                    interactionPoints[trackPoint.arucoID] = new List<InteractionPointModel>();
-                }
-                interactionPoints[trackPoint.arucoID].Add(iPoint);
-            } 
+                interactionPoints[tPoint.arucoID].Add(iPoint);
+            }
         
             arUcoDetector.SetWhitelist(usedArucoIds);
             isInitialized = true;
@@ -219,14 +240,13 @@ namespace Tracking.Markers
             currentIPoint = interactionPointID;
 
             // find the marker that has the interaction point
-            var point = apiLoader.LoadIPointByID(interactionPointID);
-            if (point == null)
+            if (!ipToTp.TryGetValue(interactionPointID, out var current))
             {
                 DebugController.Log(this, "Marker was not found for interaction point: " + interactionPointID);
                 return currentMarker;
             }
             
-            currentMarker = point.trackpointID;
+            currentMarker = current;
             
             // Hide all markers but the one we want to show
             foreach (var markerID in markerControllers.Keys)

@@ -6,6 +6,12 @@ namespace Tests
 {
     public static class DummyData
     {
+        public static List<ManualModel> Manuals = new List<ManualModel>()
+        {
+            Manual1,
+            Manual2
+        };
+        
         public static ManualModel Manual1 => new ManualModel()
         {
             manualID = 1,
