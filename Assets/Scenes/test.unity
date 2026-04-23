@@ -748,6 +748,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1467683160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1467683162}
+  - component: {fileID: 1467683161}
+  - component: {fileID: 1467683163}
+  m_Layer: 0
+  m_Name: TEST
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1467683161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467683160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e9ddebb1b9e88641a88461f1896a057, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TestingThings
+  apiLoader: {fileID: 1467683163}
+--- !u!4 &1467683162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467683160}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1185.0824, y: 680.0024, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1467683163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467683160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2684c281d927f7459d287b1c4fd82ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Network.APILoader
+  useFakeData: 0
 --- !u!1001 &2779136913724868700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -759,6 +818,34 @@ PrefabInstance:
     - target: {fileID: 4105423195406024819, guid: 8d1f9a0035295114e89e3b99e36425eb, type: 3}
       propertyPath: m_Name
       value: UButtonSuccess
+      objectReference: {fileID: 0}
+    - target: {fileID: 4491791859067881041, guid: 8d1f9a0035295114e89e3b99e36425eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4491791859067881041, guid: 8d1f9a0035295114e89e3b99e36425eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4491791859067881041, guid: 8d1f9a0035295114e89e3b99e36425eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1467683161}
+    - target: {fileID: 4491791859067881041, guid: 8d1f9a0035295114e89e3b99e36425eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4491791859067881041, guid: 8d1f9a0035295114e89e3b99e36425eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnBtn
+      objectReference: {fileID: 0}
+    - target: {fileID: 4491791859067881041, guid: 8d1f9a0035295114e89e3b99e36425eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TestingThings, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4491791859067881041, guid: 8d1f9a0035295114e89e3b99e36425eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7059432005283789625, guid: 8d1f9a0035295114e89e3b99e36425eb, type: 3}
       propertyPath: m_Pivot.x
@@ -960,3 +1047,4 @@ SceneRoots:
   - {fileID: 1376129903}
   - {fileID: 135828071}
   - {fileID: 324997643}
+  - {fileID: 1467683162}

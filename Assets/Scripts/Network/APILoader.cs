@@ -25,7 +25,7 @@ namespace Network
             if (useFakeData)
                 dataSource = new FakeManualDataSource();
             else
-                dataSource = new APIManualDataSource();
+                dataSource = new APIManualDataSource("http://192.168.0.102:8000");
         }
 
         public async void LoadManual(int manualId)
