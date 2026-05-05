@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DebugTools;
 using Detection;
 using ManualSession;
@@ -53,7 +54,7 @@ namespace Tracking.Markers
         }
 
         // TODO: maybe add some optimization...
-        public async void LoadScenario(ScenarioModel scenarioModel)
+        public async Task<List<ScenarioInteractionModel>> LoadScenario(ScenarioModel scenarioModel)
         {
             DebugController.Log(this, "Loading scenario: " + scenarioModel.name);
             isInitialized = false;
@@ -109,6 +110,9 @@ namespace Tracking.Markers
             isInitialized = true;
             DebugController.Log(this, 
                 $"Loaded scenario: {scenarioModel.scenarioID} with {interactionPoints.Count} interactions");
+
+            // For step manuals
+            return interactions;
         }
 
         private void OnMarkersDetected(List<MarkerDetectionResult> markers)

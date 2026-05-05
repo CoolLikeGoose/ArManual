@@ -18,8 +18,6 @@ namespace ManualSession
         /// </summary>
         public event Action<int> OnStepChanged;
         
-        private ScenarioModel currentScenario;
-        
         private List<ScenarioInteractionModel> currentScenarioInteractions = new();
         private int currentInteraction = 1;
         
@@ -39,12 +37,11 @@ namespace ManualSession
             stepUI.ToggleStepUI(false);
         }
 
-        public void SetStepManual(ScenarioModel scenario)
+        public void SetCurrentInteractions(List<ScenarioInteractionModel> interactions)
         {
             currentScenarioInteractions.Clear();
             
-            currentScenario = scenario;
-            currentScenarioInteractions = currentScenario.Interactions
+            currentScenarioInteractions = interactions
                 .OrderBy(i => i.order)
                 .ToList();
             currentInteraction = 0;

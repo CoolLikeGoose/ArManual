@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DebugTools;
 using Detection;
 using Enums;
@@ -55,7 +56,7 @@ namespace Core
             apiLoader.LoadManual(int.Parse(qrContent.Split('-')[1]));
         }
 
-        private void OnInstructionLoaded(ManualModel data)
+        private async void OnInstructionLoaded(ManualModel data)
         {
             stateMachine.SetState(AppState.Display);
         
@@ -67,17 +68,17 @@ namespace Core
             scenarioManager.SetManual(data);
             
             ScenarioModel scenario = scenarioManager.SelectFirstScenario();
-            markerManager.LoadScenario(scenario);
-            OnStepManualLoad(scenario);
+            var interactions = await markerManager.LoadScenario(scenario);
+            OnStepManualLoad(scenario, interactions);
         }
 
-        private void OnScenarioLoaded(ScenarioModel data)
+        private async void OnScenarioLoaded(ScenarioModel data)
         {
-            markerManager.LoadScenario(data);
-            OnStepManualLoad(data);
+            var interactions = await markerManager.LoadScenario(data);
+            OnStepManualLoad(data, interactions);
         }
 
-        private void OnStepManualLoad(ScenarioModel scenario)
+        private void OnStepManualLoad(ScenarioModel scenario, List<ScenarioInteractionModel> interactions)
         {
             if (scenario.type != (int)ScenarioType.Step)
             {
@@ -89,7 +90,7 @@ namespace Core
             
             DebugController.Log(this, "Step manual is loaded");
             stepScenarioManager.enabled = true;
-            stepScenarioManager.SetStepManual(scenario);
+            stepScenarioManager.SetCurrentInteractions(interactions);
         }
 
         private void OnStepChanged(int nextInteractionPointId)

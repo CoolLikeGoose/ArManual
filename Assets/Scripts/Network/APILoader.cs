@@ -14,11 +14,8 @@ namespace Network
         [SerializeField] private bool useFakeData = true;
         
         private IManualDataSource dataSource;
-        // Backend API 
         
         public event Action<ManualModel> OnManualLoaded;
-        public event Action<string> OnManualLoadFailed;
-        public event Action<InteractionPointModel> OnIPointLoaded;
 
         private void Awake()
         {
