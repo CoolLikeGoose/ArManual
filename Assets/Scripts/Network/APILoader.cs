@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DebugTools;
@@ -20,7 +19,7 @@ namespace Network
         private void Awake()
         {
             if (useFakeData)
-                dataSource = new FakeManualDataSource();
+                dataSource = new FakeManualDataSource(DummyData.CardboardTesting);
             else
                 dataSource = new APIManualDataSource("http://192.168.0.102:8000");
         }
