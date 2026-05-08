@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DebugTools;
 using Models;
-using Network.APIWrappers;
 using Network.APIWrappers.ListWrappers;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -31,7 +30,8 @@ namespace Network
         {
             string url = $"{baseUrl}/scenarios/{scenarioID}/interactions";
             string json = await Get(url);
-
+            
+            // TODO: add same json body to override as in IntPoint
             var wrapper = JsonUtility.FromJson<ScenarioInteractionListWrapper>(json);
             return wrapper.items;
         }

@@ -72,6 +72,16 @@ namespace Tracking.Markers
                 .ToList();
             
             var iPoints = await apiLoader.LoadIPointsBatch(ipIds);
+            // Override content 
+            foreach (var iP in  iPoints)
+            {
+                string overrideContent = interactions.First(i => i.interactionPointID == iP.interactionPointID).overrideContent;
+                if (!string.IsNullOrEmpty(overrideContent))
+                {
+                    iP.content = overrideContent;
+                }
+            }
+            
             var ipDict = iPoints.ToDictionary(ip => ip.interactionPointID, ip => ip);
             
             // Collect trackPoint Id's and load them

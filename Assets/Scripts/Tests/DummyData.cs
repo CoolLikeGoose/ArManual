@@ -288,7 +288,7 @@ namespace Tests
             //List of scenarios
             scenarios = new List<ScenarioModel>()
             {
-                // Overview - 1 Overview
+                // Overview - 1 General Overview
                 new ScenarioModel()
                 {
                     scenarioID = 1,
@@ -297,7 +297,7 @@ namespace Tests
                     //Type - overview - 0/step - 1
                     type = 0,
                     //Category(for prettier display)
-                    category = "Overview",
+                    category = "General Overview",
                     // Order in category
                     order = 1,
                     Interactions = new List<ScenarioInteractionModel>()
@@ -305,7 +305,7 @@ namespace Tests
                         new ScenarioInteractionModel()
                         {
                             interactionID = 0,
-                            interactionPointID = 200
+                            interactionPointID = 200,
                         },
                         new ScenarioInteractionModel()
                         {
@@ -364,13 +364,13 @@ namespace Tests
                         },
                     }
                 },
-                // Maintenance Hatch - 2 Overview
+                // Maintenance Hatch - 2 General Overview
                 new ScenarioModel()
                 {
                     scenarioID = 2,
                     name = "Maintenance Hatch",
                     type = 0,
-                    category = "Overview",
+                    category = "General Overview",
                     order = 2,
                     Interactions = new List<ScenarioInteractionModel>()
                     {
@@ -530,16 +530,9 @@ namespace Tests
                         },
                         new ScenarioInteractionModel()
                         {
-                            interactionID = 31,
-                            interactionPointID = 205,
-                            order = 2,
-                            overrideContent = "Confirm the entered code is correct, and \"Maintenance\" is displayed."
-                        },
-                        new ScenarioInteractionModel()
-                        {
                             interactionID = 32,
                             interactionPointID = 206,
-                            order = 3,
+                            order = 2,
                             overrideContent = "Confirm the maintenance procedure.\n\n" +
                                               "Do not disable power cable during the process."
                         },
@@ -547,15 +540,15 @@ namespace Tests
                         {
                             interactionID = 33,
                             interactionPointID = 214,
-                            order = 4,
+                            order = 3,
                             overrideContent = "Insert flash drive provided by manufacturer with program list."
                         },
                         new ScenarioInteractionModel()
                         {
-                            interactionID = 34,
+                            interactionID = 31,
                             interactionPointID = 205,
-                            order = 5,
-                            overrideContent = "Test another name."
+                            order = 4,
+                            overrideContent = "Choose desired program from the list to install."
                         },
                     }
                 },
@@ -704,7 +697,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 200,
-                trackpointID = 10,
+                trackpointID = 0,
                 iPointName = "Model Info",
                 position = new Vector3(0, 0, 0),
                 content = "Model: VA‑305H\n" +
@@ -719,7 +712,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 201,
-                trackpointID = 11,
+                trackpointID = 1,
                 iPointName = "Start",
                 position = new Vector3(0, 12, 0),
                 content = "The Start control initiates the primary operation sequence of the device." +
@@ -729,7 +722,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 202,
-                trackpointID = 11,
+                trackpointID = 1,
                 iPointName = "Stop",
                 position = new Vector3(0, 9, 0),
                 content = "The Stop control immediately halts all running operations." +
@@ -739,7 +732,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 203,
-                trackpointID = 11,
+                trackpointID = 1,
                 iPointName = "Pause",
                 position = new Vector3(0, 6, 0),
                 content = "The Pause control temporarily suspends the current operation without resetting progress." +
@@ -749,7 +742,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 204,
-                trackpointID = 11,
+                trackpointID = 1,
                 iPointName = "Status indicator",
                 position = new Vector3(4, 16, 0),
                 content = "The status indicator displays the current operational state of the device." +
@@ -764,7 +757,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 205,
-                trackpointID = 12,
+                trackpointID = 2,
                 iPointName = "Display",
                 position = new Vector3(0, 4, -3),
                 content = "The main display provides real‑time feedback during operation and data entry. It shows digits, prompts and warnings as the user interacts with the device." +
@@ -773,7 +766,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 206,
-                trackpointID = 12,
+                trackpointID = 2,
                 iPointName = "Confirm",
                 position = new Vector3(6, 3, 0),
                 content = "The Confirm control finalizes the current input and instructs the system to process it." +
@@ -782,7 +775,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 207,
-                trackpointID = 12,
+                trackpointID = 2,
                 iPointName = "Cancel",
                 position = new Vector3(6, -3, 0),
                 content = "The Cancel control clears the current input or removes the last digit. It is used to correct mistakes or exit an input sequence when necessary." +
@@ -791,7 +784,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 208,
-                trackpointID = 12,
+                trackpointID = 2,
                 iPointName = "Numpad",
                 position = new Vector3(15, 0, 0),
                 content = "The numeric keypad is used to enter operational or diagnostic codes:" +
@@ -803,7 +796,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 220,
-                trackpointID = 13,
+                trackpointID = 3,
                 iPointName = "Maintenance hatch", //Main point
                 position = new Vector3(-7, 2, 0),
                 content = "The maintenance hatch provides access to the internal service area of the device." +
@@ -814,7 +807,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 209,
-                trackpointID = 13,
+                trackpointID = 3,
                 iPointName = "Cover latch",
                 position = new Vector3(-6, 1.5f, 0),
                 content = "The cover latch secures the service panel and must be released before accessing internal components; always disconnect power before operating the latch."
@@ -822,7 +815,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 221,
-                trackpointID = 13,
+                trackpointID = 3,
                 iPointName = "Latch screw 1",
                 position = new Vector3(-6, 4, 0),
                 content = "Unscrew the screw"
@@ -830,7 +823,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 222,
-                trackpointID = 13,
+                trackpointID = 3,
                 iPointName = "Latch screw 2",
                 position = new Vector3(-6, -1.5f, 0),
                 content = "Unscrew the screw"
@@ -838,7 +831,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 211,
-                trackpointID = 13,
+                trackpointID = 3,
                 iPointName = "Filter slot",
                 position = new Vector3(-7.7f, 3.5f, 0),
                 content = "The filter slot contains the replaceable airflow or dust filter used to maintain stable device performance." +
@@ -849,7 +842,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 212,
-                trackpointID = 13,
+                trackpointID = 3,
                 iPointName = "Service LED",
                 position = new Vector3(-7.7f, -1.3f, 0),
                 content = "Service LED states:" +
@@ -861,7 +854,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 213,
-                trackpointID = 14,
+                trackpointID = 4,
                 iPointName = "Power port",
                 position = new Vector3(-6, 0, 0),
                 content = "The power port connects the device to the main power supply. Ensure the connector is fully seated and the cable is not damaged." +
@@ -870,7 +863,7 @@ namespace Tests
             new InteractionPointModel()
             {
                 interactionPointID = 214,
-                trackpointID = 14,
+                trackpointID = 4,
                 iPointName = "Data port",
                 position = new Vector3(-11, 0, 0),
                 content = "The data port provides communication with external systems, diagnostic tools or update utilities. " +
@@ -881,69 +874,69 @@ namespace Tests
         //-------------------------TRACK POINTS-------------------------
         public static List<TrackPointModel> TrackPoints = new List<TrackPointModel>()
         {
-            new TrackPointModel()
-            {
-                trackpointID = 0,
-                trackpointName = "Front panel",
-                arucoID = 0,
-                sizeCm = 6f,
-            },
-            new TrackPointModel()
-            {
-                trackpointID = 1,
-                trackpointName = "Front panel backplate",
-                arucoID = 1,
-                sizeCm = 5f,
-            },
-            new TrackPointModel()
-            {
-                trackpointID = 2,
-                trackpointName = "Numpad",
-                arucoID = 2,
-                sizeCm = 5f,
-            },
-            new TrackPointModel()
-            {
-                trackpointID = 3,
-                trackpointName = "Calc back bottom",
-                arucoID = 3,
-                sizeCm = 4f,
-            },
-            new TrackPointModel()
-            {
-                trackpointID = 4,
-                trackpointName = "Calc back top",
-                arucoID = 4,
-                sizeCm = 3f,
-            },
+            // new TrackPointModel()
+            // {
+            //     trackpointID = 0,
+            //     trackpointName = "Front panel",
+            //     arucoID = 0,
+            //     sizeCm = 6f,
+            // },
+            // new TrackPointModel()
+            // {
+            //     trackpointID = 1,
+            //     trackpointName = "Front panel backplate",
+            //     arucoID = 1,
+            //     sizeCm = 5f,
+            // },
+            // new TrackPointModel()
+            // {
+            //     trackpointID = 2,
+            //     trackpointName = "Numpad",
+            //     arucoID = 2,
+            //     sizeCm = 5f,
+            // },
+            // new TrackPointModel()
+            // {
+            //     trackpointID = 3,
+            //     trackpointName = "Calc back bottom",
+            //     arucoID = 3,
+            //     sizeCm = 4f,
+            // },
+            // new TrackPointModel()
+            // {
+            //     trackpointID = 4,
+            //     trackpointName = "Calc back top",
+            //     arucoID = 4,
+            //     sizeCm = 3f,
+            // },
             //-------------------------cardboard-------------------------
             new TrackPointModel()
             {
-                trackpointID = 10,
+                trackpointID = 0,
                 trackpointName = "Info",
                 arucoID = 0,
                 sizeCm = 6f,
             },new TrackPointModel()
             {
-                trackpointID = 11,
+                trackpointID = 1,
                 trackpointName = "Buttons",
                 arucoID = 1,
                 sizeCm = 5f,
             },new TrackPointModel()
             {
-                trackpointID = 12,
+                trackpointID = 2,
                 trackpointName = "Numpad",
                 arucoID = 2,
                 sizeCm = 5f,
             },new TrackPointModel()
             {
-                trackpointID = 13,
+                trackpointID = 3,
                 trackpointName = "Service",
                 arucoID = 3,
                 sizeCm = 4f,
             },new TrackPointModel()
             {
-                trackpointID = 14,
+                trackpointID = 4,
                 trackpointName = "IOPanel",
                 arucoID = 4,
                 sizeCm = 3f,
