@@ -545,10 +545,10 @@ namespace Tests
                         },
                         new ScenarioInteractionModel()
                         {
-                            interactionID = 31,
+                            interactionID = 34,
                             interactionPointID = 205,
                             order = 4,
-                            overrideContent = "Choose desired program from the list to install."
+                            overrideContent = "Check if desired program is displayed on the screen, and confirm the program upload."
                         },
                     }
                 },
@@ -797,7 +797,7 @@ namespace Tests
             {
                 interactionPointID = 220,
                 trackpointID = 3,
-                iPointName = "Maintenance hatch", //Main point
+                iPointName = "Maint. hatch", //Main point
                 position = new Vector3(-7, 2, 0),
                 content = "The maintenance hatch provides access to the internal service area of the device." +
                           "\nIt is used for inspecting the filter, checking its condition and performing routine maintenance tasks." +
@@ -833,7 +833,7 @@ namespace Tests
                 interactionPointID = 211,
                 trackpointID = 3,
                 iPointName = "Filter slot",
-                position = new Vector3(-7.7f, 3.5f, 0),
+                position = new Vector3(-14.7f, 3.5f, 0),
                 content = "The filter slot contains the replaceable airflow or dust filter used to maintain stable device performance." +
                           "\n• Remove the old filter during maintenance." +
                           "\n• Clean the slot before inserting a new one." +
